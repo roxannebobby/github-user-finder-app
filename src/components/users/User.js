@@ -1,25 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Repos from '../../repos/Repos';
+import GithubContext from '../../context/github/githubContext';
 
-const User = ({
-	user,
-	loading,
-	getUser,
-	getRepos,
-	getUserRepos,
-	repos,
-	match,
-}) => {
-	// the brackets at the end of the function mimics the componentDidMount from a class component
+const User = ({ match }) => {
+	const githubContext = useContext(GithubContext);
+	const { getUser, loading, user, repos, getUserRepos } = githubContext;
+
 	useEffect(() => {
 		getUser(match.params.login);
-		// match.params is a react method that indicates pulling the info from the URL paramaters and using them somewhere (here we use .login paramater)
 		getUserRepos(match.params.login);
-		// the note below will allow you to remove the warning message pertaining the to empty bracket
-
 		// eslint-disable-next-line
 	}, []);
 
@@ -108,14 +99,6 @@ const User = ({
 			<Repos repos={repos} />
 		</>
 	);
-};
-
-User.propTypes = {
-	loading: PropTypes.bool.isRequired,
-	user: PropTypes.object.isRequired,
-	getUser: PropTypes.func.isRequired,
-	getRepos: PropTypes.object.isRequired,
-	getUserRepos: PropTypes.func.isRequired,
 };
 
 export default User;
