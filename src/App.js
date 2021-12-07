@@ -1,33 +1,31 @@
 // react elments
-import { useState, setState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
-
 // styles
 import './App.css';
-
 // pages
 import About from './components/pages/About';
-
 // layout components
 import NavBar from './components/layout/NavBar';
 import Alert from './components/layout/Alert';
-
 // user components
 import Users from './components/users/Users';
 import User from './components/users/User';
 import Search from './components/users/Search';
-
 // state components
 import useLoading from './components/hooks/useLoading';
 import useUsers from './components/hooks/useUsers';
+import useUser from './components/hooks/useUser';
+import useRepos from './components/hooks/useRepos';
+import useAlert from './components/hooks/useAlert';
 
 const App = () => {
-	const [users, setUsers] = useUsers([]);
-	const [user, setUser] = useState({});
-	const [repos, setRepos] = useState([]);
 	const [loading, setLoading] = useLoading(false);
-	const [alert, setAlert] = useState(null);
+	const [users, setUsers] = useUsers([]);
+	const [user, setUser] = useUser({});
+	const [repos, setRepos] = useRepos([]);
+	const [alert, setAlert] = useAlert(null);
 
 	// search github user
 	const searchUsers = async (text) => {
@@ -64,7 +62,7 @@ const App = () => {
 		setLoading(false);
 	};
 
-	const setUserAlert = (msg, type) => {
+	const showAlert = (msg, type) => {
 		setAlert({ msg, type });
 		setTimeout(() => setAlert(null), 5000);
 	};
@@ -87,7 +85,7 @@ const App = () => {
 										searchUsers={searchUsers}
 										clearUsers={clearUsers}
 										showClear={users.length > 0 ? true : false}
-										setAlert={setUserAlert}
+										setAlert={showAlert}
 									/>
 									<Users loading={loading} users={users} />
 								</>
