@@ -3,13 +3,14 @@ import axios from 'axios';
 import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
-import PropTypes from 'prop-types';
+import Alert from './components/layout/Alert';
 import './App.css';
 
 class App extends Component {
 	state = {
 		users: [],
 		loading: false,
+		alert: null,
 	};
 
 	// using this.state because this is a class component
@@ -42,6 +43,13 @@ class App extends Component {
 		this.setState({ users: [], loading: false });
 	};
 
+	// set the Alert that is triggered in the Search.js component; prop values are coming from the Search.js component
+	setAlert = (msg, type) => {
+		// we added a new slice of state about called alert, so now we will set a new state when this method is called, and it will put the message text into msg and the type style into type
+
+		this.setState({ alert: { msg: msg, type: type } });
+	};
+
 	render() {
 		const { users, loading } = this.state;
 
@@ -51,10 +59,12 @@ class App extends Component {
 					<NavBar />
 				</nav>
 				<div className='container'>
+					<Alert alert={this.state.alert} />
 					<Search
 						searchUsers={this.searchUsers}
 						clearUsers={this.clearUsers}
 						showClear={users.length > 0 ? true : false}
+						setAlert={this.setAlert}
 					/>
 					<Users loading={loading} users={users} />
 				</div>

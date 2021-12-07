@@ -11,6 +11,7 @@ class Search extends Component {
 		searchUsers: PropTypes.func.isRequired,
 		clearUsers: PropTypes.func.isRequired,
 		showClear: PropTypes.bool.isRequired,
+		setAlert: PropTypes.func.isRequired,
 	};
 
 	// here we are creating a change event; every time the text input in the form changes (someone types in something) we can capture that event through the DOM (e.target.value); the e captures each individual event change that happens
@@ -29,13 +30,19 @@ class Search extends Component {
 	// additionally, the 'this' is needed because this is a class component
 	onSubmit = (e) => {
 		e.preventDefault();
-		// here we have to pass the value that is return upon submit (this.state.text) UP to the App component through props
-		// code below will send the state.text to a method called searchUsers; this prop sending UP (prop drilling) is why using Context and Hooks is a better method
 
-		// the process is this -- in the form, onSubmit calls on the method onSubmit (this method), in this method we are using the 'prop' of searchUsers, which we added on App.js inside the <Search />, and we pass this the content of this.state.text from the Search component, once passed to the App.js component, it calls another moethod (searchUsers) which uses the this.state.text content as a prop inside that method
-		this.props.searchUsers(this.state.text);
-		// below code clears after sending
-		this.setState({ text: '' });
+		// we are checking if the state of text has any content; if it does not, we want to display the text, with the style 'light' (red color), otherwise we will return the requested users from the search
+		if (this.state.text === '') {
+			this.props.setAlert('Please enter search text ...', 'light');
+		} else {
+			// here we have to pass the value that is return upon submit (this.state.text) UP to the App component through props
+			// code below will send the state.text to a method called searchUsers; this prop sending UP (prop drilling) is why using Context and Hooks is a better method
+
+			// the process is this -- in the form, onSubmit calls on the method onSubmit (this method), in this method we are using the 'prop' of searchUsers, which we added on App.js inside the <Search />, and we pass this the content of this.state.text from the Search component, once passed to the App.js component, it calls another moethod (searchUsers) which uses the this.state.text content as a prop inside that method
+			this.props.searchUsers(this.state.text);
+			// below code clears after sending
+			this.setState({ text: '' });
+		}
 	};
 
 	render() {
