@@ -18,11 +18,14 @@ import Users from './components/users/Users';
 import User from './components/users/User';
 import Search from './components/users/Search';
 
+// state components
+import useLoading from './components/hooks/useLoading';
+
 const App = () => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [repos, setRepos] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useLoading(false);
 	const [alert, setAlert] = useState(null);
 
 	// search github user
