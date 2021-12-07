@@ -10,7 +10,9 @@ class App extends Component {
 				<nav className='navbar bg-primary'>
 					<NavBar />
 				</nav>
-				<Users />
+				<div className='container'>
+					<Users />
+				</div>
 			</div>
 		);
 	}
