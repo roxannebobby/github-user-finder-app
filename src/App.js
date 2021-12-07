@@ -20,9 +20,10 @@ import Search from './components/users/Search';
 
 // state components
 import useLoading from './components/hooks/useLoading';
+import useUsers from './components/hooks/useUsers';
 
 const App = () => {
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useUsers([]);
 	const [user, setUser] = useState({});
 	const [repos, setRepos] = useState([]);
 	const [loading, setLoading] = useLoading(false);
