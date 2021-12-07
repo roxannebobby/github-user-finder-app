@@ -1,39 +1,40 @@
-import React, { Component } from 'react';
+import React from 'react';
 import UserItem from './UserItem';
+import Spinner from '../layout/Spinner';
+import PropTypes from 'prop-types';
 
-class Users extends Component {
-	state = {
-		users: [
-			{
-				id: '1',
-				login: 'Jmz0127',
-				avatar_url: 'https://avatars.githubusercontent.com/u/45496047?v=4',
-				html_url: 'https://github.com/Jmz0127',
-			},
-			{
-				id: '2',
-				login: 'morvin1',
-				avatar_url: 'https://avatars.githubusercontent.com/u/45055471?v=4',
-				html_url: 'https://github.com/morvin12',
-			},
-			{
-				id: '3',
-				login: 'MaryAngelique',
-				avatar_url: 'https://avatars.githubusercontent.com/u/51681480?v=4',
-				html_url: 'https://github.com/MaryAngelique',
-			},
-		],
-	};
-
-	render() {
+// now users and loading are being passed in directly as props, so we no longer need this.props infront of the map method
+const Users = ({ users, loading }) => {
+	if (loading) {
+		return <Spinner />;
+	} else {
 		return (
 			<div className='grid-3'>
-				{this.state.users.map((user) => (
+				{users.map((user) => (
 					<UserItem key={user.id} user={user} />
 				))}
 			</div>
 		);
 	}
-}
+};
+
+Users.propTypes = {
+	users: PropTypes.array.isRequired,
+	loading: PropTypes.bool.isRequired,
+};
 
 export default Users;
+
+// we use this.props.users below because the users are now coming in as props from the App state for users, which fetches from the axios call; also, now that this no longer has state, changing it to a functional component; old class component code below
+
+// class Users extends Component {
+// 	render() {
+// 		return (
+// 			<div className='grid-3'>
+// 				{this.props.users.map((user) => (
+// 					<UserItem key={user.id} user={user} />
+// 				))}
+// 			</div>
+// 		);
+// 	}
+// }
