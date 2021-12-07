@@ -1,5 +1,5 @@
 // react elments
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 // styles
@@ -14,38 +14,17 @@ import Users from './components/users/Users';
 import User from './components/users/User';
 import Search from './components/users/Search';
 // state components
-import useLoading from './components/hooks/useLoading';
-import useUsers from './components/hooks/useUsers';
-import useUser from './components/hooks/useUser';
-import useRepos from './components/hooks/useRepos';
-import useAlert from './components/hooks/useAlert';
+import GithubState from './context/github/GithubState';
 
 const App = () => {
-	const [loading, setLoading] = useLoading(false);
-	const [users, setUsers] = useUsers([]);
-	const [user, setUser] = useUser({});
-	const [repos, setRepos] = useRepos([]);
-	const [alert, setAlert] = useAlert(null);
+	// all this is moved to githubState
+	const [repos, setRepos] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [alert, setAlert] = useState(null);
 
-	// search github user
-	const searchUsers = async (text) => {
-		setLoading(true);
-		const res = await axios.get(
-			`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-		);
-		setUsers(res.data.items);
-		setLoading(false);
-	};
+	// search github user --  moved to GithubState.js
 
-	//get single github users
-	const getUser = async (username) => {
-		setLoading(true);
-		const res = await axios.get(
-			`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-		);
-		setUser(res.data);
-		setLoading(false);
-	};
+	//get single github users -- moved to githubState.js
 
 	// get user repos
 	const getUserRepos = async (username) => {
@@ -57,10 +36,7 @@ const App = () => {
 		setLoading(false);
 	};
 
-	const clearUsers = () => {
-		setUsers([]);
-		setLoading(false);
-	};
+	// clear users -- moved to githubState.js
 
 	const showAlert = (msg, type) => {
 		setAlert({ msg, type });
@@ -68,48 +44,38 @@ const App = () => {
 	};
 
 	return (
-		<Router>
-			<div className='App'>
-				<nav className='navbar bg-primary'>
-					<NavBar />
-				</nav>
-				<div className='container'>
-					<Alert alert={alert} />
-					<Switch>
-						<Route
-							exact
-							path='/'
-							render={(props) => (
-								<>
-									<Search
-										searchUsers={searchUsers}
-										clearUsers={clearUsers}
-										showClear={users.length > 0 ? true : false}
-										setAlert={showAlert}
-									/>
-									<Users loading={loading} users={users} />
-								</>
-							)}
-						/>
-						<Route exact path='/about' component={About} />
-						<Route
-							exact
-							path='/user/:login'
-							render={(props) => (
-								<User
-									{...props}
-									getUser={getUser}
-									getUserRepos={getUserRepos}
-									user={user}
-									repos={repos}
-									loading={loading}
-								/>
-							)}
-						/>
-					</Switch>
+		<GithubState>
+			<Router>
+				<div className='App'>
+					<nav className='navbar bg-primary'>
+						<NavBar />
+					</nav>
+					<div className='container'>
+						<Alert alert={alert} />
+						<Switch>
+							<Route
+								exact
+								path='/'
+								render={(props) => (
+									<>
+										<Search setAlert={showAlert} />
+										<Users />
+									</>
+								)}
+							/>
+							<Route exact path='/about' component={About} />
+							<Route
+								exact
+								path='/user/:login'
+								render={(props) => (
+									<User {...props} getUserRepos={getUserRepos} repos={repos} />
+								)}
+							/>
+						</Switch>
+					</div>
 				</div>
-			</div>
-		</Router>
+			</Router>
+		</GithubState>
 	);
 };
 
