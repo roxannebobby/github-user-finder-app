@@ -18,20 +18,6 @@ class App extends Component {
 		alert: null,
 	};
 
-	// using this.state because this is a class component
-	// once we have added our searchUsers method below, this code is no longer needed as all it does is display a random 30 users from a github call
-
-	// async componentDidMount() {
-	// 	this.setState({ loading: true });
-	// 	const res = await axios.get(
-	// 		`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-	// 	);
-	// 	this.setState({ users: res.data, loading: false });
-	// }
-
-	// below we have drilled UP this.state.text (which is a component-level state) from the Search.js page and so we refer to this "prop" as 'text' so we can complete the code needed to change the text state
-
-	// to search users now, we make a call to the github search/users
 	searchUsers = async (text) => {
 		this.setState({ loading: true });
 		const res = await axios.get(
@@ -58,21 +44,13 @@ class App extends Component {
 		this.setState({ repos: res.data, loading: false });
 	};
 
-	// clear users from state; this also works from drilling props UP from the search component
-
-	// the showClear prop added to <Search /> below is a ternary used to only show the clear button IF the length of the state of users is greater than 0
-
 	clearUsers = () => {
 		this.setState({ users: [], loading: false });
 	};
 
-	// set the Alert that is triggered in the Search.js component; prop values are coming from the Search.js component
 	setAlert = (msg, type) => {
-		// we added a new slice of state about called alert, so now we will set a new state when this method is called, and it will put the message text into msg and the type style into type
-
 		this.setState({ alert: { msg: msg, type: type } });
 
-		// add setTimeout method to make sure the message goes away after a short time; this resets the alert state to null after 5000 milliseconds (5 seconds)
 		setTimeout(() => this.setState({ alert: null }), 5000);
 	};
 
