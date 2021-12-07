@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 const NavBar = ({ icon, title }) => {
 	return (
-		<div>
+		<nav>
 			<h1>
 				<i className={icon} /> {title}
 			</h1>
-		</div>
+		</nav>
 	);
 };
 
