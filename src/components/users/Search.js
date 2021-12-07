@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Search extends Component {
 	// whenever we have a form, we need to have some sort of state for any of the form fields that will be changed by the user; 'text' below is a 'slice of state' we want to monitor
 	state = {
 		text: '',
+	};
+
+	static propTypes = {
+		searchUsers: PropTypes.func.isRequired,
+		clearUsers: PropTypes.func.isRequired,
+		showClear: PropTypes.bool.isRequired,
 	};
 
 	// here we are creating a change event; every time the text input in the form changes (someone types in something) we can capture that event through the DOM (e.target.value); the e captures each individual event change that happens
@@ -50,6 +57,14 @@ class Search extends Component {
 						value='Search'
 					/>
 				</form>
+				{this.props.showClear && (
+					<button
+						className='btn btn-light btn-block'
+						onClick={this.props.clearUsers}
+					>
+						clear
+					</button>
+				)}
 			</div>
 		);
 	}

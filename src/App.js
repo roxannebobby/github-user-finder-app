@@ -3,6 +3,7 @@ import axios from 'axios';
 import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
+import PropTypes from 'prop-types';
 import './App.css';
 
 class App extends Component {
@@ -26,10 +27,19 @@ class App extends Component {
 
 	// to search users now, we make a call to the github search/users
 	searchUsers = async (text) => {
+		this.setState({ loading: true });
 		const res = await axios.get(
 			`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
 		);
 		this.setState({ users: res.data.items, loading: false });
+	};
+
+	// clear users from state; this also works from drilling props UP from the search component
+
+	// the showClear prop added to <Search /> below is a ternary used to only show the clear button IF the length of the state of users is greater than 0
+
+	clearUsers = () => {
+		this.setState({ users: [], loading: false });
 	};
 
 	render() {
@@ -39,11 +49,16 @@ class App extends Component {
 					<NavBar />
 				</nav>
 				<div className='container'>
-					<Search searchUsers={this.searchUsers} />
+					<Search
+						searchUsers={this.searchUsers}
+						clearUsers={this.clearUsers}
+						showClear={this.state.users.length > 0 ? true : false}
+					/>
 					<Users loading={this.state.loading} users={this.state.users} />
 				</div>
 			</div>
 		);
 	}
 }
+
 export default App;
