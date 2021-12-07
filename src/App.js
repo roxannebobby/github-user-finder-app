@@ -48,6 +48,9 @@ class App extends Component {
 		// we added a new slice of state about called alert, so now we will set a new state when this method is called, and it will put the message text into msg and the type style into type
 
 		this.setState({ alert: { msg: msg, type: type } });
+
+		// add setTimeout method to make sure the message goes away after a short time; this resets the alert state to null after 5000 milliseconds (5 seconds)
+		setTimeout(() => this.setState({ alert: null }), 5000);
 	};
 
 	render() {
